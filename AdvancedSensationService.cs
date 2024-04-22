@@ -5,17 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilder;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationService {
 
 
         public static List<SensationWithMuscles> splitSensation(MicroSensation micro, Muscle[] muscles = null) {
-            if (micro == null) {
-                throw new ArgumentException("No MicroSensationFound");
-            }
-
             List<SensationWithMuscles> split = new List<SensationWithMuscles>();
+
+            if (micro == null) {
+                return split;
+            }
 
             float time = 0.1f;
 
@@ -61,6 +62,24 @@ namespace OwoAdvancedSensationBuilder {
             }
             Sensation s = SensationsFactory.Create(100, 0.1f, 100, 0, 0, 0);
             return new SensationWithMuscles(s, modifiedMuscle);
+        }
+
+        public static List<SensationWithMuscles> createSensationCurve(List<int> intensities, Muscle[] muscles = null) {
+            List<SensationWithMuscles> curve = new List<SensationWithMuscles>();
+
+            if (intensities == null) {
+                return curve;
+            }
+
+            foreach (int intensity in intensities) {
+                curve.Add(createAdvancedMicro(intensity, muscles));
+            }
+
+            return curve;
+        }
+
+        public static int float2snippets(float seconds) {
+            return (int) Math.Round(seconds * 10);
         }
 
         public static List<SensationWithMuscles> actualMerge(List<SensationWithMuscles> origSnippets, List<SensationWithMuscles> newSnippets, MuscleMergeMode mode, int delaySnippets) {
@@ -163,6 +182,18 @@ namespace OwoAdvancedSensationBuilder {
                 }
             }
             return mergedMuscles.ToArray();
+        }
+
+        public static List<SensationWithMuscles> cutSensation(List<SensationWithMuscles> origSnippets, int from, int till) {
+            List<SensationWithMuscles> cutSnippets = new List<SensationWithMuscles>();
+
+            for (int i = 0; i < origSnippets.Count; i++) {
+                if (i >= from && i <= till) {
+                    cutSnippets.Add(origSnippets[i]);
+                }
+            }
+
+            return cutSnippets;
         }
 
     }

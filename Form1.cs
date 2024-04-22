@@ -147,5 +147,11 @@ namespace OwoAdvancedSensationBuilder {
             advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, MuscleMergeMode.MAX, 1.5f).build();
             updateVisualisation();
         }
+
+        private void btnDebug_Click(object sender, EventArgs e) {
+            // advancedSensation = new AdvancedSensationBuilder(advancedSensation).cutAtTime(0.5f, false).build();
+            advancedSensation = new AdvancedSensationBuilder(new List<int> { 0, 0, 0, 0, 100, 50, 20, 10, 50, 100 }).build();
+            updateVisualisation();
+        }
     }
 }

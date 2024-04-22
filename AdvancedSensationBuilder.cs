@@ -10,21 +10,13 @@ namespace OwoAdvancedSensationBuilder {
 
         public enum MuscleMergeMode { MAX, KEEP, OVERRIDE, MIN };
 
-        MicroSensation micro = null;
         List<SensationWithMuscles> sensationSnippets = null;
 
         // Helper
         Muscle[] muscles = null;
+        MicroSensation micro = null;
 
-
-        public AdvancedSensationBuilder(Sensation sensation) {
-            analyzeSensation(sensation);
-            if (sensationSnippets == null) {
-                // Not null when Sensation is SensationsSequence
-                this.sensationSnippets = AdvancedSensationService.splitSensation(this.micro, this.muscles);
-            }
-        }
-        public AdvancedSensationBuilder(Sensation sensation, Muscle[] muscles) {
+        public AdvancedSensationBuilder(Sensation sensation, Muscle[] muscles = null) {
             this.muscles = muscles;
             analyzeSensation(sensation);
             if (sensationSnippets == null) {
@@ -32,6 +24,11 @@ namespace OwoAdvancedSensationBuilder {
                 this.sensationSnippets = AdvancedSensationService.splitSensation(this.micro, this.muscles);
             }
         }
+
+        public AdvancedSensationBuilder(List<int> intensities, Muscle[] muscles = null) {
+            this.sensationSnippets = AdvancedSensationService.createSensationCurve(intensities, muscles);
+        }
+
         private void analyzeSensation(Sensation sensation) {
             if (sensation is MicroSensation) {
                 this.micro = sensation as MicroSensation;
@@ -78,9 +75,40 @@ namespace OwoAdvancedSensationBuilder {
                 // noting to merge
                 return this;
             }
-
-            int delaySnippets = (int) Math.Round(delay * 10);
+            int delaySnippets = AdvancedSensationService.float2snippets(delay);
             this.sensationSnippets = AdvancedSensationService.actualMerge(this.sensationSnippets, newSnippets, mode, delaySnippets);
+            return this;
+        }
+
+        public AdvancedSensationBuilder cutAtTime(float cutAtSecond, bool keepFirstHalf) {
+            int cutAt = AdvancedSensationService.float2snippets(cutAtSecond);
+            if (keepFirstHalf) {
+                this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets, 0, cutAt);
+            } else {
+                this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets, cutAt, this.sensationSnippets.Count);
+            }
+            return this;
+        }
+
+        public AdvancedSensationBuilder cutAtPercent(int cutAtPercent, bool keepFirstHalf) {
+            int cutAt = (int)Math.Round(((float)this.sensationSnippets.Count) / 100 * cutAtPercent);
+            if (keepFirstHalf) {
+                this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets, 0, cutAt);
+            } else {
+                this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets, cutAt, this.sensationSnippets.Count);
+            }
+            return this;
+        }
+
+        public AdvancedSensationBuilder cutBetweenTime(float fromSecond, float tillSecond) {
+            this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets,
+                AdvancedSensationService.float2snippets(fromSecond), AdvancedSensationService.float2snippets(tillSecond));
+            return this;
+        }
+
+        public AdvancedSensationBuilder cutBetweenPercent(int fromPercent, int tillPercent) {
+            this.sensationSnippets = AdvancedSensationService.cutSensation(this.sensationSnippets,
+                (int) Math.Round(((float)this.sensationSnippets.Count) / 100 * fromPercent), (int)Math.Round (((float)this.sensationSnippets.Count) / 100 * tillPercent));
             return this;
         }
     }
