@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnBasic = new System.Windows.Forms.Button();
@@ -53,6 +52,8 @@
             this.btnDebug = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.txtName = new System.Windows.Forms.TextBox();
+            this.btnAddToManager = new System.Windows.Forms.Button();
             this.btnManualBuild = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.lblTwo = new System.Windows.Forms.Label();
@@ -61,8 +62,33 @@
             this.txtAdvanced = new System.Windows.Forms.TextBox();
             this.txtBasic1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnRemoveNow = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lbManager = new System.Windows.Forms.ListBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btnLoopNow = new System.Windows.Forms.Button();
+            this.btnPlayNow = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lbSensations = new System.Windows.Forms.ListBox();
+            this.lblName = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.tbInensityMultiply = new System.Windows.Forms.TrackBar();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblIntensityMultiplier = new System.Windows.Forms.Label();
+            this.tbProgress = new System.Windows.Forms.TrackBar();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lblNameManager = new System.Windows.Forms.Label();
+            this.btnRemoveAfter = new System.Windows.Forms.Button();
+            this.txtAdvanced2 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).BeginInit();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -288,7 +314,7 @@
             // 
             // btnMerge
             // 
-            this.btnMerge.Location = new System.Drawing.Point(6, 87);
+            this.btnMerge.Location = new System.Drawing.Point(6, 126);
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(173, 33);
             this.btnMerge.TabIndex = 31;
@@ -298,7 +324,7 @@
             // 
             // btnMergeDelayed
             // 
-            this.btnMergeDelayed.Location = new System.Drawing.Point(6, 126);
+            this.btnMergeDelayed.Location = new System.Drawing.Point(185, 126);
             this.btnMergeDelayed.Name = "btnMergeDelayed";
             this.btnMergeDelayed.Size = new System.Drawing.Size(173, 33);
             this.btnMergeDelayed.TabIndex = 33;
@@ -328,6 +354,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.txtName);
+            this.tabPage1.Controls.Add(this.btnAddToManager);
             this.tabPage1.Controls.Add(this.btnToggle);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.label5);
@@ -366,6 +394,24 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Creator";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // txtName
+            // 
+            this.txtName.Location = new System.Drawing.Point(185, 73);
+            this.txtName.Name = "txtName";
+            this.txtName.Size = new System.Drawing.Size(173, 20);
+            this.txtName.TabIndex = 38;
+            this.txtName.Text = "Name For Manager";
+            // 
+            // btnAddToManager
+            // 
+            this.btnAddToManager.Location = new System.Drawing.Point(6, 66);
+            this.btnAddToManager.Name = "btnAddToManager";
+            this.btnAddToManager.Size = new System.Drawing.Size(173, 33);
+            this.btnAddToManager.TabIndex = 37;
+            this.btnAddToManager.Text = "Add Advanced to Manager";
+            this.btnAddToManager.UseVisualStyleBackColor = true;
+            this.btnAddToManager.Click += new System.EventHandler(this.btnAddToManager_Click);
             // 
             // btnManualBuild
             // 
@@ -430,6 +476,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.panel2);
+            this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -437,6 +485,204 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Manager";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.btnRemoveAfter);
+            this.panel2.Controls.Add(this.lblNameManager);
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this.tbProgress);
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Controls.Add(this.btnRemoveNow);
+            this.panel2.Controls.Add(this.tbInensityMultiply);
+            this.panel2.Controls.Add(this.label8);
+            this.panel2.Controls.Add(this.label12);
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.lbManager);
+            this.panel2.Controls.Add(this.lblIntensityMultiplier);
+            this.panel2.Location = new System.Drawing.Point(6, 219);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(788, 214);
+            this.panel2.TabIndex = 9;
+            // 
+            // btnRemoveNow
+            // 
+            this.btnRemoveNow.Location = new System.Drawing.Point(208, 23);
+            this.btnRemoveNow.Name = "btnRemoveNow";
+            this.btnRemoveNow.Size = new System.Drawing.Size(154, 23);
+            this.btnRemoveNow.TabIndex = 10;
+            this.btnRemoveNow.Text = "Remove immediatly";
+            this.btnRemoveNow.UseVisualStyleBackColor = true;
+            this.btnRemoveNow.Click += new System.EventHandler(this.btnStopNow_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(49, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Manager";
+            // 
+            // lbManager
+            // 
+            this.lbManager.FormattingEnabled = true;
+            this.lbManager.Location = new System.Drawing.Point(8, 23);
+            this.lbManager.Name = "lbManager";
+            this.lbManager.Size = new System.Drawing.Size(191, 186);
+            this.lbManager.TabIndex = 8;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.txtAdvanced2);
+            this.panel1.Controls.Add(this.btnLoopNow);
+            this.panel1.Controls.Add(this.btnPlayNow);
+            this.panel1.Controls.Add(this.label11);
+            this.panel1.Controls.Add(this.lbSensations);
+            this.panel1.Controls.Add(this.lblName);
+            this.panel1.Location = new System.Drawing.Point(6, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(788, 207);
+            this.panel1.TabIndex = 9;
+            // 
+            // btnLoopNow
+            // 
+            this.btnLoopNow.Location = new System.Drawing.Point(208, 53);
+            this.btnLoopNow.Name = "btnLoopNow";
+            this.btnLoopNow.Size = new System.Drawing.Size(154, 23);
+            this.btnLoopNow.TabIndex = 12;
+            this.btnLoopNow.Text = "Loop Now";
+            this.btnLoopNow.UseVisualStyleBackColor = true;
+            this.btnLoopNow.Click += new System.EventHandler(this.btnLoopNow_Click);
+            // 
+            // btnPlayNow
+            // 
+            this.btnPlayNow.Location = new System.Drawing.Point(208, 24);
+            this.btnPlayNow.Name = "btnPlayNow";
+            this.btnPlayNow.Size = new System.Drawing.Size(154, 23);
+            this.btnPlayNow.TabIndex = 11;
+            this.btnPlayNow.Text = "Play Now";
+            this.btnPlayNow.UseVisualStyleBackColor = true;
+            this.btnPlayNow.Click += new System.EventHandler(this.btnPlayNow_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 1);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(59, 13);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "Sensations";
+            // 
+            // lbSensations
+            // 
+            this.lbSensations.FormattingEnabled = true;
+            this.lbSensations.Location = new System.Drawing.Point(8, 22);
+            this.lbSensations.Name = "lbSensations";
+            this.lbSensations.Size = new System.Drawing.Size(191, 173);
+            this.lbSensations.TabIndex = 7;
+            this.lbSensations.SelectedIndexChanged += new System.EventHandler(this.lbSensations_SelectedIndexChanged);
+            // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(205, 8);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(35, 13);
+            this.lblName.TabIndex = 6;
+            this.lblName.Text = "Name";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(754, 196);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(31, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "+100";
+            // 
+            // tbInensityMultiply
+            // 
+            this.tbInensityMultiply.Location = new System.Drawing.Point(205, 148);
+            this.tbInensityMultiply.Maximum = 100;
+            this.tbInensityMultiply.Minimum = -100;
+            this.tbInensityMultiply.Name = "tbInensityMultiply";
+            this.tbInensityMultiply.Size = new System.Drawing.Size(580, 45);
+            this.tbInensityMultiply.TabIndex = 13;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(205, 132);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(87, 13);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "IntensityMultiplier";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(205, 196);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(28, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "-100";
+            // 
+            // lblIntensityMultiplier
+            // 
+            this.lblIntensityMultiplier.AutoSize = true;
+            this.lblIntensityMultiplier.Location = new System.Drawing.Point(488, 196);
+            this.lblIntensityMultiplier.Name = "lblIntensityMultiplier";
+            this.lblIntensityMultiplier.Size = new System.Drawing.Size(13, 13);
+            this.lblIntensityMultiplier.TabIndex = 17;
+            this.lblIntensityMultiplier.Text = "0";
+            // 
+            // tbProgress
+            // 
+            this.tbProgress.Enabled = false;
+            this.tbProgress.Location = new System.Drawing.Point(368, 23);
+            this.tbProgress.Name = "tbProgress";
+            this.tbProgress.Size = new System.Drawing.Size(415, 45);
+            this.tbProgress.TabIndex = 18;
+            this.tbProgress.TickStyle = System.Windows.Forms.TickStyle.Both;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(365, 7);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(48, 13);
+            this.label13.TabIndex = 19;
+            this.label13.Text = "Progress";
+            // 
+            // lblNameManager
+            // 
+            this.lblNameManager.AutoSize = true;
+            this.lblNameManager.Location = new System.Drawing.Point(205, 7);
+            this.lblNameManager.Name = "lblNameManager";
+            this.lblNameManager.Size = new System.Drawing.Size(35, 13);
+            this.lblNameManager.TabIndex = 13;
+            this.lblNameManager.Text = "Name";
+            // 
+            // btnRemoveAfter
+            // 
+            this.btnRemoveAfter.Location = new System.Drawing.Point(208, 52);
+            this.btnRemoveAfter.Name = "btnRemoveAfter";
+            this.btnRemoveAfter.Size = new System.Drawing.Size(154, 23);
+            this.btnRemoveAfter.TabIndex = 20;
+            this.btnRemoveAfter.Text = "Remove after Finish";
+            this.btnRemoveAfter.UseVisualStyleBackColor = true;
+            // 
+            // txtAdvanced2
+            // 
+            this.txtAdvanced2.Location = new System.Drawing.Point(208, 140);
+            this.txtAdvanced2.Multiline = true;
+            this.txtAdvanced2.Name = "txtAdvanced2";
+            this.txtAdvanced2.ReadOnly = true;
+            this.txtAdvanced2.Size = new System.Drawing.Size(573, 55);
+            this.txtAdvanced2.TabIndex = 23;
             // 
             // Form1
             // 
@@ -453,13 +699,18 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.Button btnBasic;
@@ -497,6 +748,28 @@
         private System.Windows.Forms.Label lblTwo;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnManualBuild;
+        private System.Windows.Forms.Button btnAddToManager;
+        private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.Label lblName;
+        private System.Windows.Forms.ListBox lbSensations;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ListBox lbManager;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button btnRemoveNow;
+        private System.Windows.Forms.Button btnLoopNow;
+        private System.Windows.Forms.Button btnPlayNow;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TrackBar tbInensityMultiply;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblIntensityMultiplier;
+        private System.Windows.Forms.TrackBar tbProgress;
+        private System.Windows.Forms.Label lblNameManager;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnRemoveAfter;
+        private System.Windows.Forms.TextBox txtAdvanced2;
     }
 }
 

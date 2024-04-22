@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilder;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace OwoAdvancedSensationBuilder {
     public partial class Form1 : Form {
@@ -16,18 +18,41 @@ namespace OwoAdvancedSensationBuilder {
             InitializeComponent();
         }
 
-        Sensation basicSensation = null;
-        Sensation basicSensation2 = Sensation.Ball;
-        Sensation advancedSensation = null;
-
-        Boolean intoS1 = true;
-
         private void Form1_Load(object sender, EventArgs e) {
             basicSensation = basicParse();
             advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
             updateVisualisation();
             OWO.AutoConnect();
+
+
+            managableSensations.Add("initial basic", basicSensation);
+            managableSensations.Add("initial advanced", advancedSensation);
+            managableSensations.Add("ball basic", basicSensation2);
+
+            lbSensations.Items.Add("initial basic");
+            lbSensations.Items.Add("initial advanced");
+            lbSensations.Items.Add("ball basic");
+            lbSensations.SelectedIndex = 0;
         }
+
+        private void btnDebug_Click(object sender, EventArgs e) {
+            // advancedSensation = new AdvancedSensationBuilder(advancedSensation).cutAtTime(0.5f, false).build();
+            // advancedSensation = new AdvancedSensationBuilder(new List<int> { 0, 0, 0, 0, 100, 50, 20, 10, 50, 100 }).build();
+            updateVisualisation();
+
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            manager.add("initial advanced", advancedSensation);
+        }
+
+        /*
+         * CREATOR
+         */
+
+        Sensation basicSensation = null;
+        Sensation basicSensation2 = Sensation.Ball;
+        Sensation advancedSensation = null;
+
+        Boolean intoS1 = true;
 
         private void btnConnect_Click(object sender, EventArgs e) {
             OWO.AutoConnect();
@@ -148,10 +173,46 @@ namespace OwoAdvancedSensationBuilder {
             updateVisualisation();
         }
 
-        private void btnDebug_Click(object sender, EventArgs e) {
-            // advancedSensation = new AdvancedSensationBuilder(advancedSensation).cutAtTime(0.5f, false).build();
-            advancedSensation = new AdvancedSensationBuilder(new List<int> { 0, 0, 0, 0, 100, 50, 20, 10, 50, 100 }).build();
-            updateVisualisation();
+        private void btnAddToManager_Click(object sender, EventArgs e) {
+
+            string name = txtName.Text;
+            int count = managableSensations.Count;
+            managableSensations.Add(name, advancedSensation);
+            if (managableSensations.Count > count) {
+                // new
+                lbSensations.Items.Add(name);
+            }
+        }
+
+        /*
+         * MANAGER
+         */
+
+        Dictionary<string, Sensation> managableSensations = new Dictionary<string, Sensation>();
+
+        private void lbSensations_SelectedIndexChanged(object sender, EventArgs e) {
+            ListBox lb = sender as ListBox;
+            string selected = lb.SelectedItem as string;
+            Sensation s = managableSensations[selected];
+
+            lblName.Text = selected;
+            txtAdvanced2.Text = s.ToString();
+        }
+
+        private void tbInensityMultiply_Scroll(object sender, EventArgs e) {
+
+        }
+
+        private void btnPlayNow_Click(object sender, EventArgs e) {
+
+        }
+
+        private void btnLoopNow_Click(object sender, EventArgs e) {
+
+        }
+
+        private void btnStopNow_Click(object sender, EventArgs e) {
+
         }
     }
 }
