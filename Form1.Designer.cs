@@ -63,32 +63,31 @@
             this.txtBasic1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnRemoveAfter = new System.Windows.Forms.Button();
+            this.lblNameManager = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.btnRemoveNow = new System.Windows.Forms.Button();
+            this.tbInensityMultiply = new System.Windows.Forms.TrackBar();
+            this.label8 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.lbManager = new System.Windows.Forms.ListBox();
+            this.lblIntensityMultiplier = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtAdvanced2 = new System.Windows.Forms.TextBox();
             this.btnLoopNow = new System.Windows.Forms.Button();
             this.btnPlayNow = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.lbSensations = new System.Windows.Forms.ListBox();
             this.lblName = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tbInensityMultiply = new System.Windows.Forms.TrackBar();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.lblIntensityMultiplier = new System.Windows.Forms.Label();
-            this.tbProgress = new System.Windows.Forms.TrackBar();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lblNameManager = new System.Windows.Forms.Label();
-            this.btnRemoveAfter = new System.Windows.Forms.Button();
-            this.txtAdvanced2 = new System.Windows.Forms.TextBox();
+            this.btnToggleRain = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -334,11 +333,11 @@
             // 
             // btnDebug
             // 
-            this.btnDebug.Location = new System.Drawing.Point(12, 427);
+            this.btnDebug.Location = new System.Drawing.Point(12, 144);
             this.btnDebug.Name = "btnDebug";
-            this.btnDebug.Size = new System.Drawing.Size(62, 46);
+            this.btnDebug.Size = new System.Drawing.Size(151, 46);
             this.btnDebug.TabIndex = 35;
-            this.btnDebug.Text = "Debug";
+            this.btnDebug.Text = "Some Debug Stuff";
             this.btnDebug.UseVisualStyleBackColor = true;
             this.btnDebug.Click += new System.EventHandler(this.btnDebug_Click);
             // 
@@ -491,8 +490,6 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.btnRemoveAfter);
             this.panel2.Controls.Add(this.lblNameManager);
-            this.panel2.Controls.Add(this.label13);
-            this.panel2.Controls.Add(this.tbProgress);
             this.panel2.Controls.Add(this.label10);
             this.panel2.Controls.Add(this.btnRemoveNow);
             this.panel2.Controls.Add(this.tbInensityMultiply);
@@ -506,8 +503,38 @@
             this.panel2.Size = new System.Drawing.Size(788, 214);
             this.panel2.TabIndex = 9;
             // 
+            // btnRemoveAfter
+            // 
+            this.btnRemoveAfter.Enabled = false;
+            this.btnRemoveAfter.Location = new System.Drawing.Point(208, 52);
+            this.btnRemoveAfter.Name = "btnRemoveAfter";
+            this.btnRemoveAfter.Size = new System.Drawing.Size(154, 23);
+            this.btnRemoveAfter.TabIndex = 20;
+            this.btnRemoveAfter.Text = "Remove after Finish";
+            this.btnRemoveAfter.UseVisualStyleBackColor = true;
+            this.btnRemoveAfter.Click += new System.EventHandler(this.btnRemoveAfter_Click);
+            // 
+            // lblNameManager
+            // 
+            this.lblNameManager.AutoSize = true;
+            this.lblNameManager.Location = new System.Drawing.Point(205, 7);
+            this.lblNameManager.Name = "lblNameManager";
+            this.lblNameManager.Size = new System.Drawing.Size(35, 13);
+            this.lblNameManager.TabIndex = 13;
+            this.lblNameManager.Text = "Name";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(754, 196);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(33, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "200%";
+            // 
             // btnRemoveNow
             // 
+            this.btnRemoveNow.Enabled = false;
             this.btnRemoveNow.Location = new System.Drawing.Point(208, 23);
             this.btnRemoveNow.Name = "btnRemoveNow";
             this.btnRemoveNow.Size = new System.Drawing.Size(154, 23);
@@ -515,6 +542,26 @@
             this.btnRemoveNow.Text = "Remove immediatly";
             this.btnRemoveNow.UseVisualStyleBackColor = true;
             this.btnRemoveNow.Click += new System.EventHandler(this.btnStopNow_Click);
+            // 
+            // tbInensityMultiply
+            // 
+            this.tbInensityMultiply.Enabled = false;
+            this.tbInensityMultiply.Location = new System.Drawing.Point(205, 148);
+            this.tbInensityMultiply.Maximum = 200;
+            this.tbInensityMultiply.Name = "tbInensityMultiply";
+            this.tbInensityMultiply.Size = new System.Drawing.Size(580, 45);
+            this.tbInensityMultiply.TabIndex = 13;
+            this.tbInensityMultiply.Value = 100;
+            this.tbInensityMultiply.Scroll += new System.EventHandler(this.tbInensityMultiply_Scroll);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(205, 132);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(87, 13);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "IntensityMultiplier";
             // 
             // label12
             // 
@@ -525,6 +572,15 @@
             this.label12.TabIndex = 9;
             this.label12.Text = "Manager";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(205, 196);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(21, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "0%";
+            // 
             // lbManager
             // 
             this.lbManager.FormattingEnabled = true;
@@ -532,6 +588,16 @@
             this.lbManager.Name = "lbManager";
             this.lbManager.Size = new System.Drawing.Size(191, 186);
             this.lbManager.TabIndex = 8;
+            this.lbManager.SelectedIndexChanged += new System.EventHandler(this.lbManager_SelectedIndexChanged);
+            // 
+            // lblIntensityMultiplier
+            // 
+            this.lblIntensityMultiplier.AutoSize = true;
+            this.lblIntensityMultiplier.Location = new System.Drawing.Point(488, 196);
+            this.lblIntensityMultiplier.Name = "lblIntensityMultiplier";
+            this.lblIntensityMultiplier.Size = new System.Drawing.Size(33, 13);
+            this.lblIntensityMultiplier.TabIndex = 17;
+            this.lblIntensityMultiplier.Text = "100%";
             // 
             // panel1
             // 
@@ -546,6 +612,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(788, 207);
             this.panel1.TabIndex = 9;
+            // 
+            // txtAdvanced2
+            // 
+            this.txtAdvanced2.Location = new System.Drawing.Point(208, 140);
+            this.txtAdvanced2.Multiline = true;
+            this.txtAdvanced2.Name = "txtAdvanced2";
+            this.txtAdvanced2.ReadOnly = true;
+            this.txtAdvanced2.Size = new System.Drawing.Size(573, 55);
+            this.txtAdvanced2.TabIndex = 23;
             // 
             // btnLoopNow
             // 
@@ -594,101 +669,32 @@
             this.lblName.TabIndex = 6;
             this.lblName.Text = "Name";
             // 
-            // label10
+            // btnToggleRain
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(754, 196);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(31, 13);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "+100";
+            this.btnToggleRain.Location = new System.Drawing.Point(12, 196);
+            this.btnToggleRain.Name = "btnToggleRain";
+            this.btnToggleRain.Size = new System.Drawing.Size(151, 46);
+            this.btnToggleRain.TabIndex = 37;
+            this.btnToggleRain.Text = "Toggle Randomized Rain";
+            this.btnToggleRain.UseVisualStyleBackColor = true;
+            this.btnToggleRain.Click += new System.EventHandler(this.btnToggleRain_Click);
             // 
-            // tbInensityMultiply
+            // label14
             // 
-            this.tbInensityMultiply.Location = new System.Drawing.Point(205, 148);
-            this.tbInensityMultiply.Maximum = 100;
-            this.tbInensityMultiply.Minimum = -100;
-            this.tbInensityMultiply.Name = "tbInensityMultiply";
-            this.tbInensityMultiply.Size = new System.Drawing.Size(580, 45);
-            this.tbInensityMultiply.TabIndex = 13;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(205, 132);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(87, 13);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "IntensityMultiplier";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(205, 196);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(28, 13);
-            this.label9.TabIndex = 15;
-            this.label9.Text = "-100";
-            // 
-            // lblIntensityMultiplier
-            // 
-            this.lblIntensityMultiplier.AutoSize = true;
-            this.lblIntensityMultiplier.Location = new System.Drawing.Point(488, 196);
-            this.lblIntensityMultiplier.Name = "lblIntensityMultiplier";
-            this.lblIntensityMultiplier.Size = new System.Drawing.Size(13, 13);
-            this.lblIntensityMultiplier.TabIndex = 17;
-            this.lblIntensityMultiplier.Text = "0";
-            // 
-            // tbProgress
-            // 
-            this.tbProgress.Enabled = false;
-            this.tbProgress.Location = new System.Drawing.Point(368, 23);
-            this.tbProgress.Name = "tbProgress";
-            this.tbProgress.Size = new System.Drawing.Size(415, 45);
-            this.tbProgress.TabIndex = 18;
-            this.tbProgress.TickStyle = System.Windows.Forms.TickStyle.Both;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(365, 7);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(48, 13);
-            this.label13.TabIndex = 19;
-            this.label13.Text = "Progress";
-            // 
-            // lblNameManager
-            // 
-            this.lblNameManager.AutoSize = true;
-            this.lblNameManager.Location = new System.Drawing.Point(205, 7);
-            this.lblNameManager.Name = "lblNameManager";
-            this.lblNameManager.Size = new System.Drawing.Size(35, 13);
-            this.lblNameManager.TabIndex = 13;
-            this.lblNameManager.Text = "Name";
-            // 
-            // btnRemoveAfter
-            // 
-            this.btnRemoveAfter.Location = new System.Drawing.Point(208, 52);
-            this.btnRemoveAfter.Name = "btnRemoveAfter";
-            this.btnRemoveAfter.Size = new System.Drawing.Size(154, 23);
-            this.btnRemoveAfter.TabIndex = 20;
-            this.btnRemoveAfter.Text = "Remove after Finish";
-            this.btnRemoveAfter.UseVisualStyleBackColor = true;
-            // 
-            // txtAdvanced2
-            // 
-            this.txtAdvanced2.Location = new System.Drawing.Point(208, 140);
-            this.txtAdvanced2.Multiline = true;
-            this.txtAdvanced2.Name = "txtAdvanced2";
-            this.txtAdvanced2.ReadOnly = true;
-            this.txtAdvanced2.Size = new System.Drawing.Size(573, 55);
-            this.txtAdvanced2.TabIndex = 23;
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(9, 128);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(91, 13);
+            this.label14.TabIndex = 38;
+            this.label14.Text = "Special Functions";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 481);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.btnToggleRain);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnDisconnect);
             this.Controls.Add(this.btnDebug);
@@ -702,11 +708,11 @@
             this.tabPage2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbProgress)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -765,11 +771,11 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lblIntensityMultiplier;
-        private System.Windows.Forms.TrackBar tbProgress;
         private System.Windows.Forms.Label lblNameManager;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnRemoveAfter;
         private System.Windows.Forms.TextBox txtAdvanced2;
+        private System.Windows.Forms.Button btnToggleRain;
+        private System.Windows.Forms.Label label14;
     }
 }
 

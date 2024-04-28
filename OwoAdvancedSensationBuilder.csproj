@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OWO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\OWO.2.4.0\lib\net48\OWO.dll</HintPath>
+      <HintPath>packages\OWO.2.4.2\lib\net48\OWO.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,8 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedSensationBuilderMergeOptions.cs" />
+    <Compile Include="AdvancedSensationBuilderOptions.cs" />
     <Compile Include="AdvancedSensationBuilder.cs" />
-    <Compile Include="AdvancedSensationManagerInstance.cs" />
+    <Compile Include="AdvancedSensationInstance.cs" />
     <Compile Include="AdvancedSensationManager.cs" />
     <Compile Include="AdvancedSensationService.cs" />
     <Compile Include="Form1.cs">

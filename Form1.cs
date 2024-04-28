@@ -6,11 +6,16 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilder;
+using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using TrackBar = System.Windows.Forms.TrackBar;
 
 namespace OwoAdvancedSensationBuilder {
     public partial class Form1 : Form {
@@ -41,7 +46,36 @@ namespace OwoAdvancedSensationBuilder {
             updateVisualisation();
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            manager.add("initial advanced", advancedSensation);
+            AdvancedSensationInstance instance = new AdvancedSensationInstance("initial advanced", advancedSensation);
+            manager.playLoop(instance);
+
+            updateVisualisationManager();
+        }
+
+        private void btnToggleRain_Click(object sender, EventArgs e) {
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            if (manager.getPlayingSensationNames().Contains("Rain Snippet")) {
+                manager.stopSensation("Rain Snippet");
+                updateVisualisationManager(true);
+            } else {
+                addRainRandom();
+                updateVisualisationManager();
+            }
+        }
+
+        private void addRainRandom() {
+
+            Random r = new Random();
+
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            AdvancedSensationInstance instance = new AdvancedSensationInstance("Rain Snippet",
+                    SensationsFactory.Create(20, 0.1f, 60, 0, 0, 0.3f).WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]));
+            instance.LastCalculationOfCycle += Instance_LastCalculationOfCycle;
+            manager.playOnce(instance);
+        }
+
+        private void Instance_LastCalculationOfCycle(AdvancedSensationInstance instance) {
+            addRainRandom();
         }
 
         /*
@@ -75,7 +109,9 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnAdvancedMuscle_Click(object sender, EventArgs e) {
-            Sensation advancedSensation = new AdvancedSensationBuilder(basicSensation, Muscle.Front).build();
+            AdvancedSensationBuilderOptions options = new AdvancedSensationBuilderOptions();
+            options.muscles = Muscle.Front;
+            Sensation advancedSensation = new AdvancedSensationBuilder(basicSensation, options).build();
             OWO.Send(advancedSensation);
         }
 
@@ -164,12 +200,19 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnMerge_Click(object sender, EventArgs e) {
-            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, MuscleMergeMode.MAX).build();
+            AdvancedSensationBuilderMergeOptions mergeOptions = new AdvancedSensationBuilderMergeOptions();
+            mergeOptions.mode = MuscleMergeMode.MAX;
+
+            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).build();
             updateVisualisation();
         }
 
         private void btnMergeDelayed_Click(object sender, EventArgs e) {
-            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, MuscleMergeMode.MAX, 1.5f).build();
+            AdvancedSensationBuilderMergeOptions mergeOptions = new AdvancedSensationBuilderMergeOptions();
+            mergeOptions.mode = MuscleMergeMode.MAX;
+            mergeOptions.delaySeconds = 1.5f;
+
+            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).build();
             updateVisualisation();
         }
 
@@ -199,19 +242,102 @@ namespace OwoAdvancedSensationBuilder {
             txtAdvanced2.Text = s.ToString();
         }
 
+        private void lbManager_SelectedIndexChanged(object sender, EventArgs e) {
+            ListBox lb = sender as ListBox;
+            string selected = lb.SelectedItem as string;
+
+            lblName.Text = selected;
+        }
+
         private void tbInensityMultiply_Scroll(object sender, EventArgs e) {
 
+            string selected = lbSensations.SelectedItem as string;
+            Sensation s = managableSensations[selected];
+
+            TrackBar tb = sender as TrackBar;
+
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            manager.updateSensation(selected, s.MultiplyIntensityBy(tb.Value));
+            updateVisualisationManager();
         }
 
         private void btnPlayNow_Click(object sender, EventArgs e) {
+            string selected = lbSensations.SelectedItem as string;
+            Sensation s = managableSensations[selected];
 
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            AdvancedSensationInstance instance = new AdvancedSensationInstance(selected, s);
+            instance.LastCalculationOfCycle += Instance_LastCalculationOfCycle1;
+            manager.playOnce(instance);
+            updateVisualisationManager();
         }
 
         private void btnLoopNow_Click(object sender, EventArgs e) {
+            string selected = lbSensations.SelectedItem as string;
+            Sensation s = managableSensations[selected];
 
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            AdvancedSensationInstance instance = new AdvancedSensationInstance(selected, s);
+            manager.playLoop(instance);
+            updateVisualisationManager();
         }
 
         private void btnStopNow_Click(object sender, EventArgs e) {
+            string selected = lbSensations.SelectedItem as string;
+
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            manager.stopSensation(selected);
+            updateVisualisationManager(true);
+        }
+
+        private void btnRemoveAfter_Click(object sender, EventArgs e) {
+
+        }
+
+        private void Instance_LastCalculationOfCycle1(AdvancedSensationInstance instance) {
+            updateVisualisationManager(true);
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
+            updateVisualisationManager();
+        }
+
+        private void updateVisualisationManager(bool wait = false) {
+
+            if (wait) {
+                System.Timers.Timer timer = new System.Timers.Timer(150);
+                timer.Elapsed += Timer_Elapsed;
+                timer.AutoReset = false;
+                timer.Enabled = true;
+                return;
+            }
+
+            if (lbManager.InvokeRequired) {
+                Action doInvoke = delegate { updateVisualisationManager(false); };
+                lbManager.Invoke(doInvoke);
+                return;
+            }
+
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+
+            List<string> names = manager.getPlayingSensationNames();
+
+            lbManager.Items.Clear();
+            foreach (string name in names) {
+                lbManager.Items.Add(name);
+            }
+
+            lblIntensityMultiplier.Text = tbInensityMultiply.Value.ToString() + "%";
+
+            if (names.Count == 0) {
+                tbInensityMultiply.Enabled = false;
+                btnRemoveNow.Enabled = false;
+                btnRemoveAfter.Enabled = false;
+            } else {
+                tbInensityMultiply.Enabled = true;
+                btnRemoveNow.Enabled = true;
+                btnRemoveAfter.Enabled = true;
+            }
 
         }
     }

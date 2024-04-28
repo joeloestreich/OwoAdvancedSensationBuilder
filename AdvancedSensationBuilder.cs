@@ -4,47 +4,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationBuilder {
 
-        public enum MuscleMergeMode { MAX, KEEP, OVERRIDE, MIN };
-
         List<SensationWithMuscles> sensationSnippets = null;
+        AdvancedSensationBuilderOptions options = null;
 
-        // Helper
-        Muscle[] muscles = null;
-        MicroSensation micro = null;
+        public AdvancedSensationBuilder(Sensation sensation, AdvancedSensationBuilderOptions options = null) {
+            if (options == null) {
+                options = new AdvancedSensationBuilderOptions();
+            }
+            this.options = options;
 
-        public AdvancedSensationBuilder(Sensation sensation, Muscle[] muscles = null) {
-            this.muscles = muscles;
-            analyzeSensation(sensation);
+            MicroSensation micro = analyzeSensation(sensation);
             if (sensationSnippets == null) {
                 // Not null when Sensation is SensationsSequence
-                sensationSnippets = AdvancedSensationService.splitSensation(micro, this.muscles);
+                sensationSnippets = AdvancedSensationService.splitSensation(micro, this.options);
             }
         }
 
-        public AdvancedSensationBuilder(List<int> intensities, Muscle[] muscles = null) {
-            sensationSnippets = AdvancedSensationService.createSensationCurve(intensities, muscles);
+        public AdvancedSensationBuilder(List<int> intensities, AdvancedSensationBuilderOptions options = null) {
+            sensationSnippets = AdvancedSensationService.createSensationCurve(intensities, options);
         }
 
-        private void analyzeSensation(Sensation sensation) {
+        private MicroSensation analyzeSensation(Sensation sensation) {
             if (sensation is MicroSensation) {
-                micro = sensation as MicroSensation;
+                return sensation as MicroSensation;
             } else if (sensation is SensationWithMuscles) {
                 SensationWithMuscles withMuscles = sensation as SensationWithMuscles;
-                if (muscles == null) {
-                    muscles = withMuscles.muscles;
+                if (options.muscles == null) {
+                    options.muscles = withMuscles.muscles;
                 }
-                analyzeSensation(withMuscles.reference);
+                return analyzeSensation(withMuscles.reference);
             } else if (sensation is SensationsSequence) {
                 sensationSnippets = new List<SensationWithMuscles>();
                 SensationsSequence sequence = sensation as SensationsSequence;
                 foreach (Sensation s in sequence.sensations) {
-                    sensationSnippets.AddRange(new AdvancedSensationBuilder(s, muscles).getSnippets());
+                    sensationSnippets.AddRange(new AdvancedSensationBuilder(s, options.copyWithoutMuscles()).getSnippets());
                 }
             }
+            return null;
         }
 
         public Sensation build() {
@@ -68,15 +69,14 @@ namespace OwoAdvancedSensationBuilder {
             return sensationSnippets;
         }
 
-        public AdvancedSensationBuilder merge(Sensation s, MuscleMergeMode mode, float delay = 0) {
+        public AdvancedSensationBuilder merge(Sensation s, AdvancedSensationBuilderMergeOptions mergeOptions) {
 
             List<SensationWithMuscles> newSnippets = new AdvancedSensationBuilder(s).getSnippets();
             if (newSnippets == null || newSnippets.Count == 0) {
                 // noting to merge
                 return this;
             }
-            int delaySnippets = AdvancedSensationService.float2snippets(delay);
-            sensationSnippets = AdvancedSensationService.actualMerge(sensationSnippets, newSnippets, mode, delaySnippets);
+            sensationSnippets = AdvancedSensationService.actualMerge(sensationSnippets, newSnippets, options, mergeOptions);
             return this;
         }
 
