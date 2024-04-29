@@ -23,10 +23,15 @@ namespace OwoAdvancedSensationBuilder {
         private List<SensationWithMuscles> _sensations;
         public List<SensationWithMuscles> sensations { get { return _sensations; } }
 
+
+        private Sensation _origSensation;
+        public Sensation origSensation { get { return _origSensation; } }
+
         public AdvancedSensationInstance(string name, Sensation sensation = null) {
             this.name = name;
             firstTick = 0;
             if (sensation != null) {
+                _origSensation = sensation;
                 _sensations = new AdvancedSensationBuilder(sensation).getSnippets();
             }
         }
@@ -46,8 +51,9 @@ namespace OwoAdvancedSensationBuilder {
             return sensations[playedSensation];
         }
 
-        public void updateSensation(List<SensationWithMuscles> newSensations) {
-            _sensations = newSensations;
+        public void updateSensation(Sensation newSensation) {
+            _origSensation = newSensation;
+            _sensations = new AdvancedSensationBuilder(newSensation).getSnippets();
         }
 
     }

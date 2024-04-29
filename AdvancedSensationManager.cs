@@ -55,10 +55,11 @@ namespace OwoAdvancedSensationBuilder {
             }
             try {
                 calculating = true;
+                processRemove(false);
                 processUpdate();
                 processAdd();
                 calcSensation();
-                processRemove();
+                processRemove(true);
             } finally {
                 calculating = false;
             }
@@ -87,7 +88,7 @@ namespace OwoAdvancedSensationBuilder {
                 }
 
                 if (oldInstance != null) {
-                    oldInstance.updateSensation(instance.sensations);
+                    oldInstance.updateSensation(instance.origSensation);
                 }
 
                 processSensation.Remove(process.Key);
@@ -110,7 +111,7 @@ namespace OwoAdvancedSensationBuilder {
             }
         }
 
-        private void processRemove() {
+        private void processRemove(bool endOfCylce) {
             foreach (var process in new Dictionary<AdvancedSensationInstance, ProcessState>(processSensation)) {
 
                 if (process.Value != ProcessState.REMOVE) {
@@ -126,7 +127,9 @@ namespace OwoAdvancedSensationBuilder {
                 processSensation.Remove(process.Key);
             }
 
-            if (playSensations.Count == 0) {
+            if (playSensations.Count == 0 && endOfCylce) {
+                // Only allow to stop manager at end of cycle.
+                // Else race time conditions might stop manager while something to add just got inserted.
                 bool toAdd = false;
                 foreach (var processInstance in processSensation) {
                     if (processInstance.Value == ProcessState.ADD) {
@@ -209,17 +212,19 @@ namespace OwoAdvancedSensationBuilder {
             tick = 0;
         }
 
-        public List<string> getPlayingSensationNames(bool addPlannedNames = true) {
-            List<string> names = new List<string>();
-            names.AddRange(playSensations.Keys);
-            if (addPlannedNames) {
+        public Dictionary<string, AdvancedSensationInstance> getPlayingSensationInstances(bool addPlanned = true) {
+            Dictionary<string, AdvancedSensationInstance> returnInstances = new Dictionary<string, AdvancedSensationInstance>();
+            foreach (var playInstance in playSensations) {
+                returnInstances.Add(playInstance.Key, playInstance.Value);
+            }
+            if (addPlanned) {
                 foreach (var processInstance in processSensation) {
                     if (processInstance.Value == ProcessState.ADD) {
-                        names.Add(processInstance.Key.name);
+                        returnInstances.Add(processInstance.Key.name, processInstance.Key);
                     }
                 }
             }
-            return names;
+            return returnInstances;
         }
 
 

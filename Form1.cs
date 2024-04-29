@@ -26,35 +26,38 @@ namespace OwoAdvancedSensationBuilder {
         private void Form1_Load(object sender, EventArgs e) {
             basicSensation = basicParse();
             advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+
+            //Here we declare two baked sensations, Ball(0) and Dart(1)
+            var auth = GameAuth.Parse("0~Ball~100,1,100,0,0,0,Impact|0%100,1%100,2%100,3%100,4%100,5%100~impact-0~#1~Dart~12,1,100,0,0,0,Impact|5%100~impact-1~");
+            OWO.Configure(auth);
+
             updateVisualisation();
             OWO.AutoConnect();
 
+            BakedSensation baked = basicSensation.Bake(3, "manual bake");
 
             managableSensations.Add("initial basic", basicSensation);
             managableSensations.Add("initial advanced", advancedSensation);
             managableSensations.Add("ball basic", basicSensation2);
+            //managableSensations.Add("baked Ball", "0");
+            //managableSensations.Add("baked Dart", "1");
 
             lbSensations.Items.Add("initial basic");
             lbSensations.Items.Add("initial advanced");
             lbSensations.Items.Add("ball basic");
+            //lbSensations.Items.Add("baked Ball");
+            //lbSensations.Items.Add("baked Dart");
             lbSensations.SelectedIndex = 0;
         }
 
         private void btnDebug_Click(object sender, EventArgs e) {
-            // advancedSensation = new AdvancedSensationBuilder(advancedSensation).cutAtTime(0.5f, false).build();
-            // advancedSensation = new AdvancedSensationBuilder(new List<int> { 0, 0, 0, 0, 100, 50, 20, 10, 50, 100 }).build();
-            updateVisualisation();
 
-            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            AdvancedSensationInstance instance = new AdvancedSensationInstance("initial advanced", advancedSensation);
-            manager.playLoop(instance);
-
-            updateVisualisationManager();
+            OWO.Send("1");
         }
 
         private void btnToggleRain_Click(object sender, EventArgs e) {
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            if (manager.getPlayingSensationNames().Contains("Rain Snippet")) {
+            if (manager.getPlayingSensationInstances().Keys.Contains("Rain Snippet")) {
                 manager.stopSensation("Rain Snippet");
                 updateVisualisationManager(true);
             } else {
@@ -291,7 +294,19 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnRemoveAfter_Click(object sender, EventArgs e) {
+            string selected = lbSensations.SelectedItem as string;
 
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            Dictionary<string, AdvancedSensationInstance> instances = manager.getPlayingSensationInstances();
+            if (instances.ContainsKey(selected)) {
+                instances[selected].LastCalculationOfCycle += Form1_LastCalculationOfCycle;
+            }
+        }
+
+        private void Form1_LastCalculationOfCycle(AdvancedSensationInstance instance) {
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            manager.stopSensation(instance.name);
+            updateVisualisationManager(true);
         }
 
         private void Instance_LastCalculationOfCycle1(AdvancedSensationInstance instance) {
@@ -320,7 +335,7 @@ namespace OwoAdvancedSensationBuilder {
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
 
-            List<string> names = manager.getPlayingSensationNames();
+            List<string> names = new List<string>(manager.getPlayingSensationInstances().Keys);
 
             lbManager.Items.Clear();
             foreach (string name in names) {

@@ -44,6 +44,9 @@ namespace OwoAdvancedSensationBuilder {
                 foreach (Sensation s in sequence.sensations) {
                     sensationSnippets.AddRange(new AdvancedSensationBuilder(s, options.copyWithoutMuscles()).getSnippets());
                 }
+            } else if (sensation is BakedSensation) {
+                BakedSensation baked = sensation as BakedSensation;
+                return analyzeSensation(baked.reference);
             }
             return null;
         }
