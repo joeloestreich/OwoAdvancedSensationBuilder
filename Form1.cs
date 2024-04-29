@@ -81,6 +81,26 @@ namespace OwoAdvancedSensationBuilder {
             addRainRandom();
         }
 
+        private void btn20_Click(object sender, EventArgs e) {
+            Sensation s = SensationsFactory.Create(100, 1, 20, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(100));
+            OWO.Send(s);
+        }
+
+        private void btn20Adv_Click(object sender, EventArgs e) {
+            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 20, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(100))).build();
+            OWO.Send(s);
+        }
+
+        private void btn120_Click(object sender, EventArgs e) {
+            Sensation s = SensationsFactory.Create(100, 1, 100, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(20));
+            OWO.Send(s);
+        }
+
+        private void btn120adv_Click(object sender, EventArgs e) {
+            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 100, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(20))).build();
+            OWO.Send(s);
+        }
+
         /*
          * CREATOR
          */

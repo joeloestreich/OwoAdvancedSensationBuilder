@@ -82,6 +82,10 @@
             this.lblName = new System.Windows.Forms.Label();
             this.btnToggleRain = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
+            this.btn120 = new System.Windows.Forms.Button();
+            this.btn20 = new System.Windows.Forms.Button();
+            this.btn20Adv = new System.Windows.Forms.Button();
+            this.btn120adv = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -688,11 +692,55 @@
             this.label14.TabIndex = 38;
             this.label14.Text = "Special Functions";
             // 
+            // btn120
+            // 
+            this.btn120.Location = new System.Drawing.Point(11, 421);
+            this.btn120.Name = "btn120";
+            this.btn120.Size = new System.Drawing.Size(73, 46);
+            this.btn120.TabIndex = 40;
+            this.btn120.Text = "100/20";
+            this.btn120.UseVisualStyleBackColor = true;
+            this.btn120.Click += new System.EventHandler(this.btn120_Click);
+            // 
+            // btn20
+            // 
+            this.btn20.Location = new System.Drawing.Point(11, 369);
+            this.btn20.Name = "btn20";
+            this.btn20.Size = new System.Drawing.Size(73, 46);
+            this.btn20.TabIndex = 41;
+            this.btn20.Text = "20";
+            this.btn20.UseVisualStyleBackColor = true;
+            this.btn20.Click += new System.EventHandler(this.btn20_Click);
+            // 
+            // btn20Adv
+            // 
+            this.btn20Adv.Location = new System.Drawing.Point(90, 369);
+            this.btn20Adv.Name = "btn20Adv";
+            this.btn20Adv.Size = new System.Drawing.Size(73, 46);
+            this.btn20Adv.TabIndex = 43;
+            this.btn20Adv.Text = "20 adv";
+            this.btn20Adv.UseVisualStyleBackColor = true;
+            this.btn20Adv.Click += new System.EventHandler(this.btn20Adv_Click);
+            // 
+            // btn120adv
+            // 
+            this.btn120adv.Location = new System.Drawing.Point(90, 421);
+            this.btn120adv.Name = "btn120adv";
+            this.btn120adv.Size = new System.Drawing.Size(73, 46);
+            this.btn120adv.TabIndex = 42;
+            this.btn120adv.Text = "100/20 adv";
+            this.btn120adv.UseVisualStyleBackColor = true;
+            this.btn120adv.Click += new System.EventHandler(this.btn120adv_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(981, 481);
+            this.Controls.Add(this.btn20Adv);
+            this.Controls.Add(this.btn120adv);
+            this.Controls.Add(this.btn20);
+            this.Controls.Add(this.btn120);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.btnToggleRain);
             this.Controls.Add(this.tabControl1);
@@ -776,6 +824,10 @@
         private System.Windows.Forms.TextBox txtAdvanced2;
         private System.Windows.Forms.Button btnToggleRain;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button btn120;
+        private System.Windows.Forms.Button btn20;
+        private System.Windows.Forms.Button btn20Adv;
+        private System.Windows.Forms.Button btn120adv;
     }
 }
 

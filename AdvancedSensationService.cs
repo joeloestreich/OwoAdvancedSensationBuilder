@@ -31,14 +31,14 @@ namespace OwoAdvancedSensationBuilder {
             while (micro.Duration >= time) {
                 if (rampUp >= time) {
                     float by = 1f / rampUp * time;
-                    split.Add(createAdvancedMicro(lerp(0, micro.intensity, by), options));
+                    split.Add(createAdvancedMicro(micro.frequency, lerp(0, micro.intensity, by), options));
                 } else if (exitDelay < time) {
-                    split.Add(createAdvancedMicro(0, options));
+                    split.Add(createAdvancedMicro(micro.frequency, 0, options));
                 } else if (rampDown < time) {
                     float by = 1f / micro.rampDown * (time - rampDown);
-                    split.Add(createAdvancedMicro(lerp(micro.intensity, 0, by), options));
+                    split.Add(createAdvancedMicro(micro.frequency, lerp(micro.intensity, 0, by), options));
                 } else {
-                    split.Add(createAdvancedMicro(micro.intensity, options));
+                    split.Add(createAdvancedMicro(micro.frequency, micro.intensity, options));
                 }
                 time = (float)Math.Round(time + 0.1f, 2);
             }
@@ -50,7 +50,7 @@ namespace OwoAdvancedSensationBuilder {
             return (int)(firstFloat * (1 - by) + secondFloat * by);
         }
 
-        private static SensationWithMuscles createAdvancedMicro(int intensity, AdvancedSensationBuilderOptions options) {
+        private static SensationWithMuscles createAdvancedMicro(int frequency, int intensity, AdvancedSensationBuilderOptions options) {
             if (options.muscles == null || options.muscles.Length == 0) {
                 options.muscles = Muscle.All;
             }
@@ -70,11 +70,11 @@ namespace OwoAdvancedSensationBuilder {
                 duration = 0.2f;
             }
 
-            Sensation s = SensationsFactory.Create(100, duration, 100, 0, 0, 0);
+            Sensation s = SensationsFactory.Create(frequency, duration, 100, 0, 0, 0);
             return new SensationWithMuscles(s, modifiedMuscle);
         }
 
-        public static List<SensationWithMuscles> createSensationCurve(List<int> intensities, AdvancedSensationBuilderOptions options = null) {
+        public static List<SensationWithMuscles> createSensationCurve(int frequency, List<int> intensities, AdvancedSensationBuilderOptions options = null) {
             if (options == null) {
                 options = new AdvancedSensationBuilderOptions();
             }
@@ -84,7 +84,7 @@ namespace OwoAdvancedSensationBuilder {
             }
 
             foreach (int intensity in intensities) {
-                curve.Add(createAdvancedMicro(intensity, options));
+                curve.Add(createAdvancedMicro(frequency, intensity, options));
             }
 
             return curve;
@@ -112,7 +112,7 @@ namespace OwoAdvancedSensationBuilder {
                 SensationWithMuscles newSensation = newSnippets[i];
 
                 if (origSensation == null && newSensation == null) {
-                    mergedSnippets.Add(createAdvancedMicro(0, options));
+                    mergedSnippets.Add(createAdvancedMicro(0, 0, options));
                 } else if (origSensation == null) {
                     mergedSnippets.Add(newSensation);
                 } else if (newSensation == null) {

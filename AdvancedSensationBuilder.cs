@@ -26,7 +26,7 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         public AdvancedSensationBuilder(List<int> intensities, AdvancedSensationBuilderOptions options = null) {
-            sensationSnippets = AdvancedSensationService.createSensationCurve(intensities, options);
+            sensationSnippets = AdvancedSensationService.createSensationCurve(100, intensities, options);
         }
 
         private MicroSensation analyzeSensation(Sensation sensation) {
