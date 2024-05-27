@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationManager {
@@ -178,18 +179,21 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         public void playOnce(Sensation sensation) {
-            addSensationInstance(new AdvancedSensationStreamInstance("sensation", sensation, false));
+            addSensationInstance(new AdvancedSensationStreamInstance(analyzeSensation(sensation).name, sensation, false));
         }
 
         public void playLoop(Sensation sensation) {
-            addSensationInstance(new AdvancedSensationStreamInstance("sensation", sensation, true));
+            addSensationInstance(new AdvancedSensationStreamInstance(analyzeSensation(sensation).name, sensation, true));
         }
 
         public void play(AdvancedSensationStreamInstance instance) {
             addSensationInstance(instance);
         }
 
-        public void updateSensation(String name, Sensation sensation) {
+        public void updateSensation(Sensation sensation, String name = null) {
+            if (name == null) {
+                name = analyzeSensation(sensation).name;
+            }
             processSensation[new AdvancedSensationStreamInstance(name, sensation)] = ProcessState.UPDATE;
         }
 
@@ -244,6 +248,24 @@ namespace OwoAdvancedSensationBuilder {
             return returnInstances;
         }
 
+        private MicroSensation analyzeSensation(Sensation sensation) {
+            if (sensation is MicroSensation) {
+                return sensation as MicroSensation;
+            } else if (sensation is SensationWithMuscles) {
+                SensationWithMuscles withMuscles = sensation as SensationWithMuscles;
+                return analyzeSensation(withMuscles.reference);
+            } else if (sensation is SensationsSequence) {
+                SensationsSequence sequence = sensation as SensationsSequence;
+                foreach (Sensation s in sequence.sensations) {
+                    // just take first
+                    return analyzeSensation(s);
+                }
+            } else if (sensation is BakedSensation) {
+                BakedSensation baked = sensation as BakedSensation;
+                return analyzeSensation(baked.reference);
+            }
+            return null;
+        }
 
     }
 }

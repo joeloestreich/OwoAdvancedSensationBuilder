@@ -281,7 +281,7 @@ namespace OwoAdvancedSensationBuilder {
             TrackBar tb = sender as TrackBar;
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            manager.updateSensation(selected, s.MultiplyIntensityBy(tb.Value));
+            manager.updateSensation(s.MultiplyIntensityBy(tb.Value), selected);
             updateVisualisationManager();
         }
 
@@ -319,7 +319,7 @@ namespace OwoAdvancedSensationBuilder {
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
             Dictionary<string, AdvancedSensationStreamInstance> instances = manager.getPlayingSensationInstances();
-            if (instances.ContainsKey(selected)) {
+            if (selected != null && instances.ContainsKey(selected)) {
                 instances[selected].LastCalculationOfCycle += Form1_LastCalculationOfCycle;
             }
         }
