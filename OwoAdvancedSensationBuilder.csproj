@@ -49,11 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedSensationBuilderMergeOptions.cs" />
-    <Compile Include="AdvancedSensationBuilderOptions.cs" />
-    <Compile Include="AdvancedSensationBuilder.cs" />
-    <Compile Include="AdvancedSensationInstance.cs" />
-    <Compile Include="AdvancedSensationManager.cs" />
+    <Compile Include="AdvancedStreamingSensation.cs" />
+    <Compile Include="builder\AdvancedSensationBuilderMergeOptions.cs" />
+    <Compile Include="builder\AdvancedSensationBuilder.cs" />
+    <Compile Include="manager\AdvancedSensationStreamInstance.cs" />
+    <Compile Include="manager\AdvancedSensationManager.cs" />
     <Compile Include="AdvancedSensationService.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

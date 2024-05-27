@@ -6,20 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilder;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
-using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderOptions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationService {
 
 
-        public static List<SensationWithMuscles> splitSensation(MicroSensation micro, AdvancedSensationBuilderOptions options = null) {
-            if (options == null) {
-                options = new AdvancedSensationBuilderOptions();
-            }
-            List<SensationWithMuscles> split = new List<SensationWithMuscles>();
+        public static AdvancedStreamingSensation splitSensation(MicroSensation micro, Muscle[] muscles) {
+
+            AdvancedStreamingSensation advanced = new AdvancedStreamingSensation();
             if (micro == null) {
-                return split;
+                return advanced;
             }
 
             float time = 0.1f;
@@ -31,60 +28,60 @@ namespace OwoAdvancedSensationBuilder {
             while (micro.Duration >= time) {
                 if (rampUp >= time) {
                     float by = 1f / rampUp * time;
-                    split.Add(createAdvancedMicro(micro.frequency, lerp(0, micro.intensity, by), options));
+                    advanced.addSensation(createAdvancedMicro(micro.frequency, lerp(0, micro.intensity, by), micro.duration <= 0.2, muscles));
                 } else if (exitDelay < time) {
-                    split.Add(createAdvancedMicro(micro.frequency, 0, options));
+                    advanced.addSensation(createAdvancedMicro(micro.frequency, 0, micro.duration <= 0.2, muscles));
                 } else if (rampDown < time) {
                     float by = 1f / micro.rampDown * (time - rampDown);
-                    split.Add(createAdvancedMicro(micro.frequency, lerp(micro.intensity, 0, by), options));
+                    advanced.addSensation(createAdvancedMicro(micro.frequency, lerp(micro.intensity, 0, by), micro.duration <= 0.2, muscles));
                 } else {
-                    split.Add(createAdvancedMicro(micro.frequency, micro.intensity, options));
+                    advanced.addSensation(createAdvancedMicro(micro.frequency, micro.intensity, micro.duration <= 0.2, muscles));
                 }
                 time = (float)Math.Round(time + 0.1f, 2);
             }
 
-            return split;
+            return advanced;
         }
 
         private static int lerp(float firstFloat, float secondFloat, float by) {
             return (int)(firstFloat * (1 - by) + secondFloat * by);
         }
 
-        private static SensationWithMuscles createAdvancedMicro(int frequency, int intensity, AdvancedSensationBuilderOptions options) {
-            if (options.muscles == null || options.muscles.Length == 0) {
-                options.muscles = Muscle.All;
+        private static AdvancedStreamingSensation createAdvancedMicro(int frequency, int intensity, bool isShortSensation, Muscle[] muscles) {
+
+            if (muscles == null || muscles.Length == 0) {
+                muscles = Muscle.All;
             }
 
-            Muscle[] modifiedMuscle = new Muscle[options.muscles.Length];
+            Muscle[] modifiedMuscle = new Muscle[muscles.Length];
             for (int i = 0; i < modifiedMuscle.Length; i++) {
-                Muscle m = options.muscles[i];
+                Muscle m = muscles[i];
                 if (intensity == 0) {
                     modifiedMuscle[i] = m.WithIntensity(0);
                 } else {
-                    modifiedMuscle[i] = m.WithIntensity((int)(((float)m.intensity) / 100 * intensity));
+                    float modifiedIntensity = ((float)m.intensity) / 100 * intensity;
+                    modifiedMuscle[i] = m.WithIntensity((int) Math.Round(modifiedIntensity));
                 }
             }
 
-            float duration = 0.1f;
-            if (options.streamMode) {
+            float duration = 0.3f;
+            if (isShortSensation) {
+                // Sensations that are 0.1 or 0.2 will get an additional 20% Scaling fixed by owo
                 duration = 0.2f;
             }
 
             Sensation s = SensationsFactory.Create(frequency, duration, 100, 0, 0, 0);
-            return new SensationWithMuscles(s, modifiedMuscle);
+            return AdvancedStreamingSensation.createByAdvancedMicro(new SensationWithMuscles(s, modifiedMuscle));
         }
 
-        public static List<SensationWithMuscles> createSensationCurve(int frequency, List<int> intensities, AdvancedSensationBuilderOptions options = null) {
-            if (options == null) {
-                options = new AdvancedSensationBuilderOptions();
-            }
-            List<SensationWithMuscles> curve = new List<SensationWithMuscles>();
+        public static AdvancedStreamingSensation createSensationCurve(int frequency, List<int> intensities, Muscle[] muscles = null) {
+            AdvancedStreamingSensation curve = new AdvancedStreamingSensation();
             if (intensities == null) {
                 return curve;
             }
 
             foreach (int intensity in intensities) {
-                curve.Add(createAdvancedMicro(frequency, intensity, options));
+                curve.addSensation(createAdvancedMicro(frequency, intensity, false, muscles));
             }
 
             return curve;
@@ -94,14 +91,22 @@ namespace OwoAdvancedSensationBuilder {
             return (int) Math.Round(seconds * 10);
         }
 
-        public static List<SensationWithMuscles> actualMerge(List<SensationWithMuscles> origSnippets, List<SensationWithMuscles> newSnippets,
-            AdvancedSensationBuilderOptions options, AdvancedSensationBuilderMergeOptions mergeOptions) {
-            List<SensationWithMuscles> mergedSnippets = new List<SensationWithMuscles>();
+        public static AdvancedStreamingSensation actualMerge(AdvancedStreamingSensation origAdvanced, AdvancedStreamingSensation newAdvanced,
+            Muscle[] muscles, AdvancedSensationBuilderMergeOptions mergeOptions) {
+            
+            List<SensationWithMuscles> origSnippets = origAdvanced.getSnippets();
+            List<SensationWithMuscles> newSnippets = newAdvanced.getSnippets();
+
+            AdvancedStreamingSensation mergedSensation = new AdvancedStreamingSensation();
 
             int delaySnippets = float2snippets(mergeOptions.delaySeconds);
 
             for (int i = 0; i < delaySnippets; i++) {
                 newSnippets.Insert(0, null);
+            }
+
+            while (newSnippets.Count < origSnippets.Count) {
+                newSnippets.Add(null);
             }
 
             for (int i = 0; i < newSnippets.Count; i++) {
@@ -112,20 +117,21 @@ namespace OwoAdvancedSensationBuilder {
                 SensationWithMuscles newSensation = newSnippets[i];
 
                 if (origSensation == null && newSensation == null) {
-                    mergedSnippets.Add(createAdvancedMicro(0, 0, options));
+                    mergedSensation.addSensation(createAdvancedMicro(0, 0, false, muscles));
                 } else if (origSensation == null) {
-                    mergedSnippets.Add(newSensation);
+                    mergedSensation.addSensation(new AdvancedStreamingSensation(newSensation));
                 } else if (newSensation == null) {
-                    mergedSnippets.Add(origSensation);
+                    mergedSensation.addSensation(new AdvancedStreamingSensation(origSensation));
                 } else { 
                     Muscle[] newMuscles = newSensation.muscles;
                     Muscle[] origMuscles = origSensation.muscles;
                     Muscle[] mergedMuscles = actualMuscleMerge(newMuscles, origMuscles, mergeOptions.mode);
-                    mergedSnippets.Add(new SensationWithMuscles(origSensation.reference, mergedMuscles));
+
+                    mergedSensation.addSensation(new AdvancedStreamingSensation(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
                 }
             }
 
-            return mergedSnippets;
+            return mergedSensation;
         }
 
         private static Muscle[] actualMuscleMerge(Muscle[] newMuscles, Muscle[] origMuscles, MuscleMergeMode mode) {
@@ -199,16 +205,16 @@ namespace OwoAdvancedSensationBuilder {
             return mergedMuscles.ToArray();
         }
 
-        public static List<SensationWithMuscles> cutSensation(List<SensationWithMuscles> origSnippets, int from, int till) {
-            List<SensationWithMuscles> cutSnippets = new List<SensationWithMuscles>();
+        public static AdvancedStreamingSensation cutSensation(AdvancedStreamingSensation origSensation, int from, int till) {
+            AdvancedStreamingSensation cutSensation = new AdvancedStreamingSensation();
 
-            for (int i = 0; i < origSnippets.Count; i++) {
+            for (int i = 0; i < origSensation.sensations.Count; i++) {
                 if (i >= from && i <= till) {
-                    cutSnippets.Add(origSnippets[i]);
+                    cutSensation.addSensation(origSensation.sensations[i]);
                 }
             }
 
-            return cutSnippets;
+            return cutSensation;
         }
 
     }

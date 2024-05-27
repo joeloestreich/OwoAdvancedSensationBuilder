@@ -25,7 +25,7 @@ namespace OwoAdvancedSensationBuilder {
 
         private void Form1_Load(object sender, EventArgs e) {
             basicSensation = basicParse();
-            advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+            advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
 
             //Here we declare two baked sensations, Ball(0) and Dart(1)
             var auth = GameAuth.Parse("0~Ball~100,1,100,0,0,0,Impact|0%100,1%100,2%100,3%100,4%100,5%100~impact-0~#1~Dart~12,1,100,0,0,0,Impact|5%100~impact-1~");
@@ -51,8 +51,8 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnDebug_Click(object sender, EventArgs e) {
-
-            OWO.Send("1");
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            manager.play(new AdvancedSensationStreamInstance("adv", advancedSensation));
         }
 
         private void btnToggleRain_Click(object sender, EventArgs e) {
@@ -71,14 +71,17 @@ namespace OwoAdvancedSensationBuilder {
             Random r = new Random();
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            AdvancedSensationInstance instance = new AdvancedSensationInstance("Rain Snippet",
+            AdvancedSensationStreamInstance instance = new AdvancedSensationStreamInstance("Rain Snippet",
                     SensationsFactory.Create(20, 0.1f, 60, 0, 0, 0.3f).WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]));
             instance.LastCalculationOfCycle += Instance_LastCalculationOfCycle;
-            manager.playOnce(instance);
+            manager.play(instance);
         }
 
-        private void Instance_LastCalculationOfCycle(AdvancedSensationInstance instance) {
-            addRainRandom();
+        private void Instance_LastCalculationOfCycle(AdvancedSensationStreamInstance instance) {
+            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
+            if (manager.getPlayingSensationInstances(false).ContainsKey("Rain Snippet")) {
+                addRainRandom();
+            }
         }
 
         private void btn20_Click(object sender, EventArgs e) {
@@ -87,7 +90,7 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btn20Adv_Click(object sender, EventArgs e) {
-            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 20, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(100))).build();
+            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 20, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(100))).getSensationForSend();
             OWO.Send(s);
         }
 
@@ -97,7 +100,7 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btn120adv_Click(object sender, EventArgs e) {
-            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 100, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(20))).build();
+            Sensation s = new AdvancedSensationBuilder(SensationsFactory.Create(100, 1, 100, 0, 0, 0).WithMuscles(Muscle.All.WithIntensity(20))).getSensationForSend();
             OWO.Send(s);
         }
 
@@ -132,19 +135,17 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnAdvancedMuscle_Click(object sender, EventArgs e) {
-            AdvancedSensationBuilderOptions options = new AdvancedSensationBuilderOptions();
-            options.muscles = Muscle.Front;
-            Sensation advancedSensation = new AdvancedSensationBuilder(basicSensation, options).build();
+            Sensation advancedSensation = new AdvancedSensationBuilder(basicSensation, Muscle.Front).getSensationForSend();
             OWO.Send(advancedSensation);
         }
 
         private void btnUpdate_Click(object sender, EventArgs e) {
             if (intoS1) {
                 basicSensation = basicParse();
-                advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
             } else {
                 basicSensation2 = basicParse();
-                advancedSensation = new AdvancedSensationBuilder(basicSensation2).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation2).getSensationForSend();
             }
             updateVisualisation();
         }
@@ -152,10 +153,10 @@ namespace OwoAdvancedSensationBuilder {
         private void btnAdd_Click(object sender, EventArgs e) {
             if (intoS1) {
                 basicSensation = basicSensation.Append(basicParse());
-                advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
             } else {
                 basicSensation2 = basicSensation2.Append(basicParse());
-                advancedSensation = new AdvancedSensationBuilder(basicSensation2).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation2).getSensationForSend();
             }
             updateVisualisation();
         }
@@ -164,10 +165,10 @@ namespace OwoAdvancedSensationBuilder {
             Random r = new Random();
             if (intoS1) {
                 basicSensation = basicParse().WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]);
-                advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
             } else {
                 basicSensation2 = basicParse().WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]);
-                advancedSensation = new AdvancedSensationBuilder(basicSensation2).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation2).getSensationForSend();
             }
             updateVisualisation();
         }
@@ -176,10 +177,10 @@ namespace OwoAdvancedSensationBuilder {
             Random r = new Random();
             if (intoS1) {
                 basicSensation = basicSensation.Append(basicParse().WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]));
-                advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
             } else {
                 basicSensation2 = basicSensation2.Append(basicParse().WithMuscles(Muscle.All[r.Next(0, Muscle.All.Length)]));
-                advancedSensation = new AdvancedSensationBuilder(basicSensation2).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation2).getSensationForSend();
             }
             updateVisualisation();
         }
@@ -198,9 +199,9 @@ namespace OwoAdvancedSensationBuilder {
             basicSensation = Sensation.Parse(txtBasic1.Text);
             basicSensation2 = Sensation.Parse(txtBasic2.Text); ;
             if (intoS1) {
-                advancedSensation = new AdvancedSensationBuilder(basicSensation).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation).getSensationForSend();
             } else {
-                advancedSensation = new AdvancedSensationBuilder(basicSensation2).build();
+                advancedSensation = new AdvancedSensationBuilder(basicSensation2).getSensationForSend();
             }
             updateVisualisation();
         }
@@ -226,7 +227,7 @@ namespace OwoAdvancedSensationBuilder {
             AdvancedSensationBuilderMergeOptions mergeOptions = new AdvancedSensationBuilderMergeOptions();
             mergeOptions.mode = MuscleMergeMode.MAX;
 
-            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).build();
+            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).getSensationForSend();
             updateVisualisation();
         }
 
@@ -235,7 +236,7 @@ namespace OwoAdvancedSensationBuilder {
             mergeOptions.mode = MuscleMergeMode.MAX;
             mergeOptions.delaySeconds = 1.5f;
 
-            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).build();
+            advancedSensation = new AdvancedSensationBuilder(basicSensation).merge(basicSensation2, mergeOptions).getSensationForSend();
             updateVisualisation();
         }
 
@@ -289,9 +290,9 @@ namespace OwoAdvancedSensationBuilder {
             Sensation s = managableSensations[selected];
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            AdvancedSensationInstance instance = new AdvancedSensationInstance(selected, s);
+            AdvancedSensationStreamInstance instance = new AdvancedSensationStreamInstance(selected, s);
             instance.LastCalculationOfCycle += Instance_LastCalculationOfCycle1;
-            manager.playOnce(instance);
+            manager.play(instance);
             updateVisualisationManager();
         }
 
@@ -300,13 +301,13 @@ namespace OwoAdvancedSensationBuilder {
             Sensation s = managableSensations[selected];
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            AdvancedSensationInstance instance = new AdvancedSensationInstance(selected, s);
-            manager.playLoop(instance);
+            AdvancedSensationStreamInstance instance = new AdvancedSensationStreamInstance(selected, s, true);
+            manager.play(instance);
             updateVisualisationManager();
         }
 
         private void btnStopNow_Click(object sender, EventArgs e) {
-            string selected = lbSensations.SelectedItem as string;
+            string selected = lbManager.SelectedItem as string;
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
             manager.stopSensation(selected);
@@ -314,22 +315,22 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         private void btnRemoveAfter_Click(object sender, EventArgs e) {
-            string selected = lbSensations.SelectedItem as string;
+            string selected = lbManager.SelectedItem as string;
 
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            Dictionary<string, AdvancedSensationInstance> instances = manager.getPlayingSensationInstances();
+            Dictionary<string, AdvancedSensationStreamInstance> instances = manager.getPlayingSensationInstances();
             if (instances.ContainsKey(selected)) {
                 instances[selected].LastCalculationOfCycle += Form1_LastCalculationOfCycle;
             }
         }
 
-        private void Form1_LastCalculationOfCycle(AdvancedSensationInstance instance) {
+        private void Form1_LastCalculationOfCycle(AdvancedSensationStreamInstance instance) {
             AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
             manager.stopSensation(instance.name);
             updateVisualisationManager(true);
         }
 
-        private void Instance_LastCalculationOfCycle1(AdvancedSensationInstance instance) {
+        private void Instance_LastCalculationOfCycle1(AdvancedSensationStreamInstance instance) {
             updateVisualisationManager(true);
         }
 
