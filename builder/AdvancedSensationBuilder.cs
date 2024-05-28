@@ -73,7 +73,7 @@ namespace OwoAdvancedSensationBuilder {
                 // noting to merge
                 return this;
             }
-            advanced = AdvancedSensationService.actualMerge(advanced, newAdvanced, muscles, mergeOptions);
+            advanced = AdvancedSensationService.actualMerge(advanced, newAdvanced, mergeOptions);
             return this;
         }
 

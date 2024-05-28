@@ -92,7 +92,7 @@ namespace OwoAdvancedSensationBuilder {
         }
 
         public static AdvancedStreamingSensation actualMerge(AdvancedStreamingSensation origAdvanced, AdvancedStreamingSensation newAdvanced,
-            Muscle[] muscles, AdvancedSensationBuilderMergeOptions mergeOptions) {
+            AdvancedSensationBuilderMergeOptions mergeOptions) {
             
             List<SensationWithMuscles> origSnippets = origAdvanced.getSnippets();
             List<SensationWithMuscles> newSnippets = newAdvanced.getSnippets();
@@ -117,17 +117,18 @@ namespace OwoAdvancedSensationBuilder {
                 SensationWithMuscles newSensation = newSnippets[i];
 
                 if (origSensation == null && newSensation == null) {
-                    mergedSensation.addSensation(createAdvancedMicro(0, 0, false, muscles));
+                    mergedSensation.addSensation(createAdvancedMicro(0, 0, false, Muscle.All));
                 } else if (origSensation == null) {
-                    mergedSensation.addSensation(new AdvancedStreamingSensation(newSensation));
+                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(newSensation));
                 } else if (newSensation == null) {
-                    mergedSensation.addSensation(new AdvancedStreamingSensation(origSensation));
+                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(origSensation));
                 } else { 
                     Muscle[] newMuscles = newSensation.muscles;
                     Muscle[] origMuscles = origSensation.muscles;
                     Muscle[] mergedMuscles = actualMuscleMerge(newMuscles, origMuscles, mergeOptions.mode);
-
-                    mergedSensation.addSensation(new AdvancedStreamingSensation(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
+                    
+                    //mergedSensation.addSensation(new AdvancedStreamingSensation(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
+                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
                 }
             }
 

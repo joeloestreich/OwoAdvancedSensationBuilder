@@ -17,5 +17,10 @@ namespace OwoAdvancedSensationBuilder {
             mode = MuscleMergeMode.MAX;
             delaySeconds = 0.0f;
         }
+
+        public AdvancedSensationBuilderMergeOptions afterDelay(float delay) {
+            delaySeconds = delaySeconds + delay;
+            return this;
+        }
     }
 }
