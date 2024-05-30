@@ -1,6 +1,7 @@
 ﻿using OWOGame;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Timers;
 using System.Windows.Forms;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationManager {
@@ -22,10 +24,15 @@ namespace OwoAdvancedSensationBuilder {
 
         private Dictionary<string, AdvancedSensationStreamInstance> playSensations;
         private Dictionary<AdvancedSensationStreamInstance, ProcessState> processSensation;
+        private List<string> _priorityList;
+        public List<string> priorityList { get { return _priorityList; } }
 
-        int tick = 0;
-        bool calculating = false;
-        Sensation calculatedSensation = null;
+        private int tick = 0;
+        private bool calculating = false;
+        private Sensation calculatedSensation = null;
+
+
+        Stopwatch watch;
 
         private AdvancedSensationManager() {
             timer = new System.Timers.Timer(100);
@@ -36,6 +43,7 @@ namespace OwoAdvancedSensationBuilder {
 
             playSensations = new Dictionary<string, AdvancedSensationStreamInstance>();
             processSensation = new Dictionary<AdvancedSensationStreamInstance, ProcessState>();
+            _priorityList = new List<string>();
         }
 
         public static AdvancedSensationManager getInstance() {
@@ -48,6 +56,7 @@ namespace OwoAdvancedSensationBuilder {
         private void streamSensation(Object source, ElapsedEventArgs e) {
             OWO.Send(calculatedSensation);
             tick++;
+            Console.WriteLine(tick + " / " + watch.ElapsedMilliseconds);
         }
 
         private void calcManagerTick(Object source, ElapsedEventArgs e) {
@@ -150,12 +159,43 @@ namespace OwoAdvancedSensationBuilder {
 
             AdvancedSensationBuilderMergeOptions mergeOptions = new AdvancedSensationBuilderMergeOptions();
             mergeOptions.mode = MuscleMergeMode.MAX;
+            mergeOptions.overwriteBaseSensation = true;
 
+
+            List<string> reversPrio = new List<string>(priorityList);
+            reversPrio.Reverse();
             Dictionary<string, AdvancedSensationStreamInstance> snapshot = new Dictionary<string, AdvancedSensationStreamInstance>(playSensations);
+
+            foreach (var priority in reversPrio) {
+                if (!snapshot.ContainsKey(priority)) {
+                    continue;
+                }
+
+                AdvancedSensationStreamInstance sensationInstance = snapshot[priority];
+
+                Sensation sensationTick = sensationInstance.getSensationAtTick(calcTick);
+                if (sensationTick == null) {
+                    continue;
+                }
+
+                if (builder == null) {
+                    builder = new AdvancedSensationBuilder(sensationTick);
+                } else {
+                    builder.merge(sensationTick, mergeOptions);
+                }
+
+                if (sensationInstance.isLastTickOfCycle(calcTick) && !sensationInstance.loop) {
+                    playSensations.Remove(priority);
+                }
+            }
+
+            mergeOptions.overwriteBaseSensation = false;
             foreach (var entry in snapshot) {
+                if (reversPrio.Contains(entry.Key)) {
+                    continue;
+                }
                 AdvancedSensationStreamInstance sensationInstance = entry.Value;
 
-                // TODO: Keep track of short sensation here
                 Sensation sensationTick = sensationInstance.getSensationAtTick(calcTick);
                 if (sensationTick == null) {
                     continue;
@@ -175,7 +215,6 @@ namespace OwoAdvancedSensationBuilder {
                 // May be null due to racetime condition, on last Sensation remove
                 calculatedSensation = builder.getSensationForStream();
             }
-            Console.WriteLine("calcSensation finish step: " + calcTick);
         }
 
         public void playOnce(Sensation sensation) {
@@ -216,6 +255,7 @@ namespace OwoAdvancedSensationBuilder {
 
             if (!timer.Enabled) {
                 calcManagerTick(null, null);
+                watch = Stopwatch.StartNew();
                 timer.Start();
             }
         }

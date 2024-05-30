@@ -1,10 +1,12 @@
-﻿using OWOGame;
+﻿using OwoAdvancedSensationBuilder.experience;
+using OWOGame;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,11 +50,53 @@ namespace OwoAdvancedSensationBuilder {
             //lbSensations.Items.Add("baked Ball");
             //lbSensations.Items.Add("baked Dart");
             lbSensations.SelectedIndex = 0;
+
+            lblSelectedExperience.Text = "Warbringers: Azshara";
+            pbThumbnail.Load("https://img.youtube.com/vi/hndyTy3uiZM/0.jpg");
+            videoUrl = "https://www.youtube.com/watch?v=hndyTy3uiZM";
         }
 
         private void btnDebug_Click(object sender, EventArgs e) {
-            AdvancedSensationManager manager = AdvancedSensationManager.getInstance();
-            manager.play(new AdvancedSensationStreamInstance("adv", advancedSensation));
+
+            Sensation none = SensationsFactory.Create(100, 5, 0, 0, 0, 0);
+            Sensation windRising1 = SensationsFactory.Create(100, 5, 12, 2, 0, 0).WithMuscles(Muscle.All);
+            Sensation windConstant2 = SensationsFactory.Create(90, 4f, 12, 0, 0, 0).WithMuscles(Muscle.All);
+            Sensation windRising2 = SensationsFactory.Create(90, 4f, 17, 2, 0, 0).WithMuscles(Muscle.All);
+            Sensation windConstant3 = SensationsFactory.Create(80, 3.5f, 17, 0, 0, 0).WithMuscles(Muscle.All);
+            Sensation windRising3 = SensationsFactory.Create(80, 3.5f, 25, 2, 0, 0).WithMuscles(Muscle.All);
+            Sensation windConstant4 = SensationsFactory.Create(70, 3.5f, 25, 0, 0, 0).WithMuscles(Muscle.All);
+            Sensation windRising4 = SensationsFactory.Create(70, 3.5f, 35, 2, 0, 0).WithMuscles(Muscle.All);
+            Sensation boomingWave = SensationsFactory.Create(45, 3, 50, 0.2f, 0, 0).WithMuscles(Muscle.All);
+
+            AdvancedSensationBuilderMergeOptions options = new AdvancedSensationBuilderMergeOptions();
+            Sensation windBaseline = new AdvancedSensationBuilder(none)
+                .appendNow(windRising1)
+                .appendNow(windRising2, windConstant2)
+                .appendNow(windRising3, windConstant3)
+                .appendNow(windRising4, windConstant4)
+                .getSensationForStream();
+
+            Sensation blow1 = SensationsFactory.Create(80, 0.4f, 35, 0.1f, 0.2f, 0);
+            Sensation blow2 = SensationsFactory.Create(80, 1.4f, 25, 0.2f, 0.2f, 0);
+
+            Sensation windLeft = new AdvancedSensationBuilder(windBaseline)
+                .merge(blow1.WithMuscles(Muscle.Arm_L), options.withDelay(3f))
+                .merge(blow1.WithMuscles(Muscle.Lumbar_L, Muscle.Abdominal_L, Muscle.Dorsal_L, Muscle.Pectoral_L), options.afterDelay(0.1f))
+                .merge(blow1.WithMuscles(Muscle.Lumbar_R, Muscle.Abdominal_R, Muscle.Dorsal_R, Muscle.Pectoral_R), options.afterDelay(0.1f).copy().withIntensityScale(70))
+                .merge(blow1.WithMuscles(Muscle.Arm_R), options.afterDelay(0.1f).copy().withIntensityScale(50))
+                .merge(blow2.WithMuscles(Muscle.Arm_L), options.withDelay(3.5f))
+                .merge(blow2.WithMuscles(Muscle.Lumbar_L, Muscle.Abdominal_L, Muscle.Dorsal_L, Muscle.Pectoral_L), options.afterDelay(0.1f))
+                .merge(blow2.WithMuscles(Muscle.Lumbar_R, Muscle.Abdominal_R, Muscle.Dorsal_R, Muscle.Pectoral_R), options.afterDelay(0.1f).copy().withIntensityScale(90))
+                .merge(blow2.WithMuscles(Muscle.Arm_R), options.afterDelay(0.1f).copy().withIntensityScale(80))
+                .merge(blow1.WithMuscles(Muscle.Arm_L), options.withDelay(4.7f).withIntensityScale(150))
+                .merge(blow1.WithMuscles(Muscle.Lumbar_L, Muscle.Abdominal_L, Muscle.Dorsal_L, Muscle.Pectoral_L), options.afterDelay(0.1f).withIntensityScale(150))
+                .merge(blow1.WithMuscles(Muscle.Lumbar_R, Muscle.Abdominal_R, Muscle.Dorsal_R, Muscle.Pectoral_R), options.afterDelay(0.1f).withIntensityScale(130))
+                .merge(blow1.WithMuscles(Muscle.Arm_R), options.afterDelay(0.1f).withIntensityScale(110))
+                .getSensationForStream();
+
+            AdvancedSensationManager.getInstance().playOnce(windBaseline);
+
+            //ExperienceHelper.getInstance().startAzshara();
         }
 
         private void btnToggleRain_Click(object sender, EventArgs e) {
@@ -375,6 +419,36 @@ namespace OwoAdvancedSensationBuilder {
                 btnRemoveAfter.Enabled = true;
             }
 
+        }
+
+        /*
+         * MANAGER
+         */
+
+        string videoUrl = "";
+
+        private void btnAzshara_Click(object sender, EventArgs e) {
+            lblSelectedExperience.Text = "Warbringers: Azshara";
+            pbThumbnail.Load("https://img.youtube.com/vi/hndyTy3uiZM/0.jpg");
+            videoUrl = "https://www.youtube.com/watch?v=hndyTy3uiZM";
+        }
+
+        private void btnOpenVideo_Click(object sender, EventArgs e) {
+            System.Diagnostics.Process.Start(videoUrl);
+        }
+
+        private void btnStartVideoSensations_Click(object sender, EventArgs e) {
+            switch (lblSelectedExperience.Text) {
+                case "Warbringers: Azshara":
+                    ExperienceHelper.getInstance().startAzshara();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void btnStopExperience_Click(object sender, EventArgs e) {
+            ExperienceHelper.getInstance().reset();
         }
     }
 }

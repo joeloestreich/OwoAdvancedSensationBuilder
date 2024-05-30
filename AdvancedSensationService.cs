@@ -119,16 +119,20 @@ namespace OwoAdvancedSensationBuilder {
                 if (origSensation == null && newSensation == null) {
                     mergedSensation.addSensation(createAdvancedMicro(0, 0, false, Muscle.All));
                 } else if (origSensation == null) {
-                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(newSensation));
+                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro((SensationWithMuscles) newSensation.MultiplyIntensityBy(mergeOptions.intensityScale)));
                 } else if (newSensation == null) {
                     mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(origSensation));
                 } else { 
-                    Muscle[] newMuscles = newSensation.muscles;
+                    Muscle[] newMuscles = newSensation.muscles.MultiplyIntensityBy(mergeOptions.intensityScale);
                     Muscle[] origMuscles = origSensation.muscles;
                     Muscle[] mergedMuscles = actualMuscleMerge(newMuscles, origMuscles, mergeOptions.mode);
-                    
-                    //mergedSensation.addSensation(new AdvancedStreamingSensation(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
-                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(new SensationWithMuscles(origSensation.reference, mergedMuscles)));
+
+                    SensationWithMuscles baseSensation = origSensation;
+                    if (mergeOptions.overwriteBaseSensation) {
+                        baseSensation = newSensation;
+                    }
+
+                    mergedSensation.addSensation(AdvancedStreamingSensation.createByAdvancedMicro(new SensationWithMuscles(baseSensation.reference, mergedMuscles)));
                 }
             }
 

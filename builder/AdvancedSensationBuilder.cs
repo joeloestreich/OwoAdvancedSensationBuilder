@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static OwoAdvancedSensationBuilder.AdvancedSensationBuilderMergeOptions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace OwoAdvancedSensationBuilder {
     internal class AdvancedSensationBuilder {
@@ -74,6 +75,29 @@ namespace OwoAdvancedSensationBuilder {
                 return this;
             }
             advanced = AdvancedSensationService.actualMerge(advanced, newAdvanced, mergeOptions);
+            return this;
+        }
+
+        public AdvancedSensationBuilder appendNow(params Sensation[] sensations) {
+
+            AdvancedSensationBuilderMergeOptions forMerge = null;
+
+            foreach (Sensation s in sensations) {
+                AdvancedStreamingSensation newAdvanced = new AdvancedSensationBuilder(s).getSensationForStream();
+                if (newAdvanced == null || newAdvanced.isEmpty()) {
+                    continue;
+                }
+
+                if (forMerge == null) {
+                    float delay = (float)Math.Round(advanced.getSnippets().Count * 0.1f, 2);
+                    advanced.addSensation(newAdvanced);
+                    forMerge = new AdvancedSensationBuilderMergeOptions();
+                    forMerge.withDelay(delay);
+                } else {
+                    advanced = AdvancedSensationService.actualMerge(advanced, newAdvanced, forMerge);
+                }
+            }
+
             return this;
         }
 

@@ -80,6 +80,13 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lbSensations = new System.Windows.Forms.ListBox();
             this.lblName = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.pbThumbnail = new System.Windows.Forms.PictureBox();
+            this.lblSelectedExperience = new System.Windows.Forms.Label();
+            this.btnStopExperience = new System.Windows.Forms.Button();
+            this.btnOpenVideo = new System.Windows.Forms.Button();
+            this.btnStartVideoSensations = new System.Windows.Forms.Button();
+            this.btnAzshara = new System.Windows.Forms.Button();
             this.btnToggleRain = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.btn120 = new System.Windows.Forms.Button();
@@ -92,6 +99,8 @@
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).BeginInit();
             this.panel1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbThumbnail)).BeginInit();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -349,6 +358,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(169, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -673,6 +683,80 @@
             this.lblName.TabIndex = 6;
             this.lblName.Text = "Name";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.pbThumbnail);
+            this.tabPage3.Controls.Add(this.lblSelectedExperience);
+            this.tabPage3.Controls.Add(this.btnStopExperience);
+            this.tabPage3.Controls.Add(this.btnOpenVideo);
+            this.tabPage3.Controls.Add(this.btnStartVideoSensations);
+            this.tabPage3.Controls.Add(this.btnAzshara);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(800, 439);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Experience";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // pbThumbnail
+            // 
+            this.pbThumbnail.Location = new System.Drawing.Point(592, 110);
+            this.pbThumbnail.Name = "pbThumbnail";
+            this.pbThumbnail.Size = new System.Drawing.Size(202, 148);
+            this.pbThumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbThumbnail.TabIndex = 7;
+            this.pbThumbnail.TabStop = false;
+            // 
+            // lblSelectedExperience
+            // 
+            this.lblSelectedExperience.AutoSize = true;
+            this.lblSelectedExperience.Location = new System.Drawing.Point(589, 261);
+            this.lblSelectedExperience.Name = "lblSelectedExperience";
+            this.lblSelectedExperience.Size = new System.Drawing.Size(130, 13);
+            this.lblSelectedExperience.TabIndex = 5;
+            this.lblSelectedExperience.Text = "Warbringers: Azshara (full)";
+            // 
+            // btnStopExperience
+            // 
+            this.btnStopExperience.Location = new System.Drawing.Point(592, 385);
+            this.btnStopExperience.Name = "btnStopExperience";
+            this.btnStopExperience.Size = new System.Drawing.Size(202, 48);
+            this.btnStopExperience.TabIndex = 4;
+            this.btnStopExperience.Text = "Stop Experience";
+            this.btnStopExperience.UseVisualStyleBackColor = true;
+            this.btnStopExperience.Click += new System.EventHandler(this.btnStopExperience_Click);
+            // 
+            // btnOpenVideo
+            // 
+            this.btnOpenVideo.Location = new System.Drawing.Point(592, 277);
+            this.btnOpenVideo.Name = "btnOpenVideo";
+            this.btnOpenVideo.Size = new System.Drawing.Size(202, 48);
+            this.btnOpenVideo.TabIndex = 3;
+            this.btnOpenVideo.Text = "Open Video";
+            this.btnOpenVideo.UseVisualStyleBackColor = true;
+            this.btnOpenVideo.Click += new System.EventHandler(this.btnOpenVideo_Click);
+            // 
+            // btnStartVideoSensations
+            // 
+            this.btnStartVideoSensations.Location = new System.Drawing.Point(592, 331);
+            this.btnStartVideoSensations.Name = "btnStartVideoSensations";
+            this.btnStartVideoSensations.Size = new System.Drawing.Size(202, 48);
+            this.btnStartVideoSensations.TabIndex = 2;
+            this.btnStartVideoSensations.Text = "Start Sensations for Video";
+            this.btnStartVideoSensations.UseVisualStyleBackColor = true;
+            this.btnStartVideoSensations.Click += new System.EventHandler(this.btnStartVideoSensations_Click);
+            // 
+            // btnAzshara
+            // 
+            this.btnAzshara.Location = new System.Drawing.Point(6, 6);
+            this.btnAzshara.Name = "btnAzshara";
+            this.btnAzshara.Size = new System.Drawing.Size(202, 85);
+            this.btnAzshara.TabIndex = 0;
+            this.btnAzshara.Text = "Warbringers: Azshara";
+            this.btnAzshara.UseVisualStyleBackColor = true;
+            this.btnAzshara.Click += new System.EventHandler(this.btnAzshara_Click);
+            // 
             // btnToggleRain
             // 
             this.btnToggleRain.Location = new System.Drawing.Point(12, 196);
@@ -759,6 +843,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbInensityMultiply)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbThumbnail)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -828,6 +915,13 @@
         private System.Windows.Forms.Button btn20;
         private System.Windows.Forms.Button btn20Adv;
         private System.Windows.Forms.Button btn120adv;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button btnAzshara;
+        private System.Windows.Forms.Button btnOpenVideo;
+        private System.Windows.Forms.Button btnStartVideoSensations;
+        private System.Windows.Forms.Button btnStopExperience;
+        private System.Windows.Forms.PictureBox pbThumbnail;
+        private System.Windows.Forms.Label lblSelectedExperience;
     }
 }
 

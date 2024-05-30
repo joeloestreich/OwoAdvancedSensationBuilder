@@ -52,6 +52,8 @@
     <Compile Include="AdvancedStreamingSensation.cs" />
     <Compile Include="builder\AdvancedSensationBuilderMergeOptions.cs" />
     <Compile Include="builder\AdvancedSensationBuilder.cs" />
+    <Compile Include="experience\ExperienceAzshara.cs" />
+    <Compile Include="experience\ExperienceHelper.cs" />
     <Compile Include="manager\AdvancedSensationStreamInstance.cs" />
     <Compile Include="manager\AdvancedSensationManager.cs" />
     <Compile Include="AdvancedSensationService.cs" />
